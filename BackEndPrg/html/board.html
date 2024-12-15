@@ -19,7 +19,7 @@
     <!-- 게시판 컨테이너 -->
     <section class="board-container">
         <!-- 첫 번째 카드 -->
-        <div class="card">
+        <div class="card" data-card-id="1">
             <div class="image-placeholder">
                 <input type="file" id="image-upload-1" accept="image/*">
                 <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
@@ -27,84 +27,29 @@
             <a href="detail.html" class="title">Apple MacBook Pro 14"</a>
             <div class="category">노트북</div>
             <div class="price">2,900,000₩</div>
+            <button class="edit-btn">수정</button>
+            <button class="delete-btn">삭제</button>
         </div>
 
-        <!-- 두 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-2" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">Samsung Galaxy Tab S9</a>
-            <div class="category">태블릿</div>
-            <div class="price">1,100,000₩</div>
-        </div>
+        <!-- 다른 카드들도 동일하게 추가 -->
+    </section>
 
-        <!-- 세 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-3" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">LG UltraGear 32" Monitor</a>
-            <div class="category">모니터</div>
-            <div class="price">850,000₩</div>
-        </div>
+    <!-- 새 카드 추가 섹션 -->
+    <section class="add-card-form">
+        <h2>새 카드 추가</h2>
+        <label for="new-card-title">제목:</label>
+        <input type="text" id="new-card-title" placeholder="상품 제목을 입력하세요">
 
-        <!-- 네 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-4" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">Sony WH-1000XM5</a>
-            <div class="category">헤드폰</div>
-            <div class="price">470,000₩</div>
-        </div>
+        <label for="new-card-category">카테고리:</label>
+        <input type="text" id="new-card-category" placeholder="카테고리를 입력하세요">
 
-        <!-- 다섯 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-5" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">Microsoft Surface Laptop 5</a>
-            <div class="category">노트북</div>
-            <div class="price">1,800,000₩</div>
-        </div>
+        <label for="new-card-price">가격:</label>
+        <input type="number" id="new-card-price" placeholder="가격을 입력하세요 (₩)">
 
-        <!-- 여섯 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-6" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">Dell XPS 13</a>
-            <div class="category">노트북</div>
-            <div class="price">1,600,000₩</div>
-        </div>
+        <label for="new-card-image">이미지 업로드:</label>
+        <input type="file" id="new-card-image" accept="image/*">
 
-        <!-- 일곱 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-7" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">Logitech MX Master 3</a>
-            <div class="category">마우스</div>
-            <div class="price">120,000₩</div>
-        </div>
-
-        <!-- 여덟 번째 카드 -->
-        <div class="card">
-            <div class="image-placeholder">
-                <input type="file" id="image-upload-8" accept="image/*">
-                <img src="/BackEndPrg/img/avatar.png" alt="업로드된 이미지">
-            </div>
-            <a href="detail.html" class="title">Apple AirPods Pro 2</a>
-            <div class="category">이어폰</div>
-            <div class="price">310,000₩</div>
-        </div>
+        <button id="add-card-button">카드 추가</button>
     </section>
 
     <footer class="footer">
@@ -113,7 +58,87 @@
             <a href="/BackEndPrg/html/contactUs.html">Contact Us</a>
         </div>
     </footer>
-    <script src="board.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const boardContainer = document.querySelector(".board-container");
+            const addCardButton = document.querySelector("#add-card-button");
+
+            // 카드 추가 기능
+            addCardButton.addEventListener("click", () => {
+                const title = document.querySelector("#new-card-title").value.trim();
+                const category = document.querySelector("#new-card-category").value.trim();
+                const price = document.querySelector("#new-card-price").value.trim();
+                const imageInput = document.querySelector("#new-card-image");
+                const imageFile = imageInput.files[0];
+
+                if (!title || !category || !price) {
+                    alert("모든 필드를 입력해주세요!");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const newCardHTML = `
+                        <div class="card">
+                            <div class="image-placeholder">
+                                <img src="${event.target.result}" alt="업로드된 이미지">
+                            </div>
+                            <a href="#" class="title">${title}</a>
+                            <div class="category">${category}</div>
+                            <div class="price">${price}₩</div>
+                            <button class="edit-btn">수정</button>
+                            <button class="delete-btn">삭제</button>
+                        </div>
+                    `;
+
+                    boardContainer.insertAdjacentHTML("beforeend", newCardHTML);
+                };
+
+                if (imageFile) {
+                    reader.readAsDataURL(imageFile);
+                } else {
+                    const defaultImage = "/BackEndPrg/img/avatar.png";
+                    const event = { target: { result: defaultImage } }; // 기본 이미지 처리
+                    reader.onload(event);
+                }
+
+                // 입력 필드 초기화
+                document.querySelector("#new-card-title").value = "";
+                document.querySelector("#new-card-category").value = "";
+                document.querySelector("#new-card-price").value = "";
+                imageInput.value = "";
+            });
+
+            // 수정 및 삭제 버튼 이벤트 연결
+            boardContainer.addEventListener("click", (event) => {
+                const target = event.target;
+
+                // 수정 버튼 클릭 처리
+                if (target.classList.contains("edit-btn")) {
+                    const card = target.closest(".card");
+                    const title = card.querySelector(".title");
+                    const category = card.querySelector(".category");
+                    const price = card.querySelector(".price");
+
+                    const newTitle = prompt("새 제목 입력:", title.textContent);
+                    const newCategory = prompt("새 카테고리 입력:", category.textContent);
+                    const newPrice = prompt("새 가격 입력:", price.textContent.replace("₩", "").trim());
+
+                    if (newTitle) title.textContent = newTitle;
+                    if (newCategory) category.textContent = newCategory;
+                    if (newPrice) price.textContent = `${newPrice}₩`;
+                }
+
+                // 삭제 버튼 클릭 처리
+                if (target.classList.contains("delete-btn")) {
+                    if (confirm("정말 삭제하시겠습니까?")) {
+                        target.closest(".card").remove();
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
